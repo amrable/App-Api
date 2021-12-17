@@ -14,8 +14,11 @@ class ApplicationsController < ApplicationController
   
   # POST /applications
   def create
-    CreateApplicationWorker.perform_async(application_params.to_h)
-    render :json => {:number => "1"} # TBD: Read from cache / DB
+    new_token = SecureRandom.uuid
+    params = application_params
+    params["token"] = new_token
+    CreateApplicationWorker.perform_async(params.to_h)
+    render :json => {:token => new_token}
   end
 
   # PATCH/PUT /applications/1
