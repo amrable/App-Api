@@ -1,51 +1,39 @@
 class MessagesController < ApplicationController
-  before_action :set_message, only: [:show, :update, :destroy]
+  before_action :set_message, only: [:show, :index]
 
   # GET /messages
   def index
-    @messages = Message.all
-
     render json: @messages
   end
 
   # GET /messages/1
   def show
+    @message = @messages.where(number: params[:number])
     render json: @message
   end
 
   # POST /messages
   def create
-    @message = Message.new(message_params)
-
-    if @message.save
-      render json: @message, status: :created, location: @message
-    else
-      render json: @message.errors, status: :unprocessable_entity
-    end
+    CreateMessageWorker.perform_async(params[:application_token], params[:chat_number], message_params[:body])
+    render :json => {:number => 1} # TBD: Read from cache / DB
   end
 
   # PATCH/PUT /messages/1
   def update
-    if @message.update(message_params)
-      render json: @message
-    else
-      render json: @message.errors, status: :unprocessable_entity
-    end
-  end
-
-  # DELETE /messages/1
-  def destroy
-    @message.destroy
+    UpdateMessageWorker.perform_async(params[:application_token], params[:chat_number], params[:number], message_params.to_h)
+    render :json => {:status => "success"}
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_message
-      @message = Message.find(params[:id])
+    def set_message 
+      @application = Application.where(token: params[:application_token])[0]
+      @chat = Chat.where(application_id: @application.id).where(number: params[:chat_number])[0]
+      @messages = Message.where(chat_id: @chat.id)
     end
-
+    
     # Only allow a trusted parameter "white list" through.
     def message_params
-      params.require(:message).permit(:chat_id, :number, :body)
+      params.require(:message).permit(:body)
     end
 end

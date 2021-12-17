@@ -24,6 +24,7 @@ class ApplicationsController < ApplicationController
   # PATCH/PUT /applications/1
   def update
     UpdateApplicationWorker.perform_async(params[:token], application_params.to_h)
+    render :json => {:status => "success"}
   end
 
 
