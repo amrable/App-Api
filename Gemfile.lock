@@ -1,3 +1,15 @@
+GIT
+  remote: https://github.com/sinatra/sinatra.git
+  revision: e69b6b9dee7165d3a583fc8a6af10ceee1ea687d
+  specs:
+    rack-protection (2.1.0)
+      rack
+    sinatra (2.1.0)
+      mustermann (~> 1.0)
+      rack (~> 2.2)
+      rack-protection (= 2.1.0)
+      tilt (~> 2.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -48,6 +60,7 @@ GEM
     builder (3.2.4)
     byebug (11.1.3)
     concurrent-ruby (1.1.9)
+    connection_pool (2.2.5)
     crass (1.0.6)
     erubi (1.10.0)
     ffi (1.15.4)
@@ -69,6 +82,8 @@ GEM
     mini_mime (1.1.2)
     minitest (5.15.0)
     msgpack (1.4.2)
+    mustermann (1.1.1)
+      ruby2_keywords (~> 0.0.1)
     mysql2 (0.5.3)
     nio4r (2.5.8)
     nokogiri (1.12.5-x86_64-darwin)
@@ -106,7 +121,14 @@ GEM
     rb-fsevent (0.11.0)
     rb-inotify (0.10.1)
       ffi (~> 1.0)
+    redis (3.3.5)
+    ruby2_keywords (0.0.5)
     ruby_dep (1.5.0)
+    sidekiq (4.2.10)
+      concurrent-ruby (~> 1.0)
+      connection_pool (~> 2.2, >= 2.2.0)
+      rack-protection (>= 1.5.0)
+      redis (~> 3.2, >= 3.2.1)
     spring (2.1.1)
     spring-watcher-listen (2.0.1)
       listen (>= 2.7, < 4.0)
@@ -120,6 +142,7 @@ GEM
       sprockets (>= 3.0.0)
     thor (1.1.0)
     thread_safe (0.3.6)
+    tilt (2.0.10)
     tzinfo (1.2.9)
       thread_safe (~> 0.1)
     websocket-driver (0.7.5)
@@ -136,6 +159,8 @@ DEPENDENCIES
   mysql2 (>= 0.4.4, < 0.6.0)
   puma (~> 3.11)
   rails (~> 5.2.6)
+  sidekiq (~> 4.1, >= 4.1.2)
+  sinatra!
   spring
   spring-watcher-listen (~> 2.0.0)
   tzinfo-data
