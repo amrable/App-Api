@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   require 'sidekiq/web'
   mount Sidekiq::Web  => "/sidekiq"
   resources :applications, param: :token do
-    resources :chats do
+    resources :chats, param: :number do
       resources :messages
     end
   end
