@@ -3,13 +3,13 @@ class ChatsController < ApplicationController
 
   # GET /applications/:application_token/chats
   def index
+    @chats = Chat.where(application_id: @application.id)
     render json: @chats
   end
 
   # GET /applications/:application_token/chats/:number
   def show
-    # TBD: index on (application id, number)
-    @chat = @chats.where(number: params[:number])
+    @chat = Chat.where(application_id: @application.id, number: params[:number])
     render json: @chat
   end
 
@@ -32,7 +32,6 @@ class ChatsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_chat
       @application = Application.where(token: params[:application_token])[0]
-      @chats = Chat.where(application_id: @application.id)
     end
 
     # Only allow a trusted parameter "white list" through.

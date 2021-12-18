@@ -3,12 +3,13 @@ class MessagesController < ApplicationController
 
   # GET /messages
   def index
+    @messages = Message.where(chat_id: @chat.id)
     render json: @messages
   end
 
   # GET /messages/1
   def show
-    @message = @messages.where(number: params[:number])
+    @message = Message.where(chat_id: @chat.id, number: params[:number])
     render json: @message
   end
 
@@ -28,8 +29,7 @@ class MessagesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_message 
       @application = Application.where(token: params[:application_token])[0]
-      @chat = Chat.where(application_id: @application.id).where(number: params[:chat_number])[0]
-      @messages = Message.where(chat_id: @chat.id)
+      @chat = Chat.where(application_id: @application.id, number: params[:chat_number])[0]
     end
     
     # Only allow a trusted parameter "white list" through.

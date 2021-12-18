@@ -4,7 +4,7 @@ class CreateMessageWorker
 
     def perform(application_token, chat_number, body)
         @application = Application.where(token: application_token)[0]
-        @chat = Chat.where(application_id: @application.id).where(number: chat_number)[0]
+        @chat = Chat.where(application_id: @application.id, number: chat_number)[0]
         @messages = @chat.messages.order(number: :desc)
         number = 1
         if @messages.length > 0
