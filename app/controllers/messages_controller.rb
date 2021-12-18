@@ -15,13 +15,17 @@ class MessagesController < ApplicationController
 
   # POST /messages
   def create
-    CreateMessageWorker.perform_async(params[:application_token], params[:chat_number], message_params[:body])
+    worker_params = message_params
+    worker_params["last_request_timestamp"] = DateTime.now
+    CreateMessageWorker.perform_async(params[:application_token], params[:chat_number], worker_params.to_h)
     render :json => {:number => 1} # TBD: Read from cache / DB
   end
 
   # PATCH/PUT /messages/1
   def update
-    UpdateMessageWorker.perform_async(params[:application_token], params[:chat_number], params[:number], message_params.to_h)
+    worker_params = message_params
+    worker_params["last_request_timestamp"] = DateTime.now
+    UpdateMessageWorker.perform_async(params[:application_token], params[:chat_number], params[:number], worker_params.to_h)
     render :json => {:status => "success"}
   end
 

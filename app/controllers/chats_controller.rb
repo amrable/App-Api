@@ -15,7 +15,9 @@ class ChatsController < ApplicationController
 
   # POST /chats
   def create
-    CreateChatWorker.perform_async(params[:application_token])
+    worker_params = {}
+    worker_params["last_request_timestamp"] = DateTime.now
+    CreateChatWorker.perform_async(params[:application_token], worker_params.to_h)
     render :json => {:number => 1} # TBD: Read from cache / DB
   end
 

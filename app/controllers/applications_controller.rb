@@ -15,15 +15,18 @@ class ApplicationsController < ApplicationController
   # POST /applications
   def create
     new_token = SecureRandom.uuid
-    params = application_params
-    params["token"] = new_token
-    CreateApplicationWorker.perform_async(params.to_h)
+    worker_params = application_params
+    worker_params["token"] = new_token
+    worker_params["last_request_timestamp"] = DateTime.now
+    CreateApplicationWorker.perform_async(worker_params.to_h)
     render :json => {:token => new_token}
   end
 
   # PATCH/PUT /applications/1
   def update
-    UpdateApplicationWorker.perform_async(params[:token], application_params.to_h)
+    worker_params = application_params
+    worker_params["last_request_timestamp"] = DateTime.now
+    UpdateApplicationWorker.perform_async(params[:token], worker_params.to_h)
     render :json => {:status => "success"}
   end
 
