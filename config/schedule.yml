@@ -1,0 +1,3 @@
+update_job:
+   cron: "*/10 * * * *"
+   class: "DatabaseUpdateWorker"
