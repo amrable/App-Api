@@ -1,5 +1,12 @@
 class ChatsController < ApplicationController
   before_action :set_chat, only: [:show, :index]
+  def initialize
+    @semaphore = Mutex.new
+  end
+
+  def synchronize(&block)
+    @semaphore.synchronize(&block)
+  end
 
   # GET /applications/:application_token/chats
   def index
@@ -17,8 +24,15 @@ class ChatsController < ApplicationController
   def create
     worker_params = {}
     worker_params["last_request_timestamp"] = DateTime.now
+    synchronize do
+      if !REDIS.get(params[:application_token]).present?
+        REDIS.set(params[:application_token], Application.where(token: params[:application_token])[0].chats.size)
+      end
+      worker_params["number"] = REDIS.get(params[:application_token]).to_i + 1
+      REDIS.set(params[:application_token], worker_params["number"])
+    end
     CreateChatWorker.perform_async(params[:application_token], worker_params.to_h)
-    render :json => {:number => 1} # TBD: Read from cache / DB
+    render :json => {:number => worker_params["number"]} 
   end
 
   # PATCH/PUT /chats/1
