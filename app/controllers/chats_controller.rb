@@ -36,13 +36,12 @@ class ChatsController < ApplicationController
   end
 
   # PATCH/PUT /chats/1
-  # def update
-  #   if @chat.update(chat_params)
-  #     render json: @chat
-  #   else
-  #     render json: @chat.errors, status: :unprocessable_entity
-  #   end
-  # end
+  def update
+    worker_params = chat_params
+    worker_params["last_request_timestamp"] = DateTime.now
+    UpdateChatWorker.perform_async(params[:application_token], params[:number], worker_params.to_h)
+    render :json => {:status => "success"}
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -51,7 +50,7 @@ class ChatsController < ApplicationController
     end
 
     # Only allow a trusted parameter "white list" through.
-    # def chat_params
-    #   params.require(:chat).permit(:number)
-    # end
+    def chat_params
+      params.require(:chat).permit(:title)
+    end
 end
