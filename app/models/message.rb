@@ -17,4 +17,16 @@ class Message < ApplicationRecord
       indexes :application_name
     end
   end
+
+  after_commit on: [:create] do
+    __elasticsearch__.index_document if self.published?
+  end
+
+  after_commit on: [:update] do
+    if self.published?
+      __elasticsearch__.update_document
+    else
+      __elasticsearch__.delete_document
+    end
+  end
 end
