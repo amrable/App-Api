@@ -1,0 +1,58 @@
+version: "3.9"
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    volumes:
+      - my-datavolume:/var/lib/mysql
+  redis:
+    image: 'redis:4.0-alpine'
+    command: redis-server
+    volumes:
+      - 'redis:/data'
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    volumes:
+      - .:/myapp
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+  sidekiq:
+    depends_on:
+      - db
+      - redis
+    build: .
+    command: bundle exec sidekiq -c 5
+    volumes:
+      - '.:/app'
+    env_file:
+      - .env
+  elasticsearch:
+      image: docker.elastic.co/elasticsearch/elasticsearch:5.5.3
+      environment:
+        - cluster.name=docker-cluster
+        - bootstrap.memory_lock=true
+        - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        - xpack.security.enabled=false
+        - xpack.monitoring.enabled=false
+        - xpack.graph.enabled=false
+        - xpack.watcher.enabled=false
+      ulimits:
+        memlock:
+          soft: -1
+          hard: -1
+      volumes:
+        - ./docker_data/elasticsearch/data:/usr/share/elasticsearch/data
+      ports:
+        - 9200:9200
+volumes:
+  my-datavolume:
+  redis:

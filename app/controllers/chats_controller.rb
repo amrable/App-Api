@@ -22,7 +22,7 @@ class ChatsController < ApplicationController
 
   # POST /chats
   def create
-    worker_params = {}
+    worker_params = chat_params
     worker_params["last_request_timestamp"] = DateTime.now
     synchronize do
       if !REDIS.get(params[:application_token]).present?
