@@ -1,4 +1,15 @@
 GIT
+  remote: https://github.com/elastic/elasticsearch-rails.git
+  revision: bfdd2243f0de298547b2dc199e9a671cf72ccde6
+  branch: 5.x
+  specs:
+    elasticsearch-model (5.1.0)
+      activesupport (> 3)
+      elasticsearch (~> 5)
+      hashie
+    elasticsearch-rails (5.1.0)
+
+GIT
   remote: https://github.com/sinatra/sinatra.git
   revision: e69b6b9dee7165d3a583fc8a6af10ceee1ea687d
   specs:
@@ -62,15 +73,43 @@ GEM
     concurrent-ruby (1.1.9)
     connection_pool (2.2.5)
     crass (1.0.6)
+    elasticsearch (5.0.5)
+      elasticsearch-api (= 5.0.5)
+      elasticsearch-transport (= 5.0.5)
+    elasticsearch-api (5.0.5)
+      multi_json
+    elasticsearch-transport (5.0.5)
+      faraday
+      multi_json
     erubi (1.10.0)
     et-orbi (1.2.6)
       tzinfo
+    faraday (1.8.0)
+      faraday-em_http (~> 1.0)
+      faraday-em_synchrony (~> 1.0)
+      faraday-excon (~> 1.1)
+      faraday-httpclient (~> 1.0.1)
+      faraday-net_http (~> 1.0)
+      faraday-net_http_persistent (~> 1.1)
+      faraday-patron (~> 1.0)
+      faraday-rack (~> 1.0)
+      multipart-post (>= 1.2, < 3)
+      ruby2_keywords (>= 0.0.4)
+    faraday-em_http (1.0.0)
+    faraday-em_synchrony (1.0.0)
+    faraday-excon (1.1.0)
+    faraday-httpclient (1.0.1)
+    faraday-net_http (1.0.1)
+    faraday-net_http_persistent (1.2.0)
+    faraday-patron (1.0.0)
+    faraday-rack (1.0.0)
     ffi (1.15.4)
     fugit (1.5.2)
       et-orbi (~> 1.1, >= 1.1.8)
       raabro (~> 1.4)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    hashie (5.0.0)
     i18n (1.8.11)
       concurrent-ruby (~> 1.0)
     listen (3.1.5)
@@ -87,6 +126,8 @@ GEM
     mini_mime (1.1.2)
     minitest (5.15.0)
     msgpack (1.4.2)
+    multi_json (1.15.0)
+    multipart-post (2.1.1)
     mustermann (1.1.1)
       ruby2_keywords (~> 0.0.1)
     mysql2 (0.5.3)
@@ -165,6 +206,8 @@ PLATFORMS
 DEPENDENCIES
   bootsnap (>= 1.1.0)
   byebug
+  elasticsearch-model!
+  elasticsearch-rails!
   listen (>= 3.0.5, < 3.2)
   mysql2 (>= 0.4.4, < 0.6.0)
   puma (~> 3.11)
