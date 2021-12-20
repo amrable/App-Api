@@ -1,27 +1,57 @@
 ## How to run with docker compose
 ```
-docker compose up
+docker-compose up
 ```
-maybe an error occur after running this command because the web persistent volume does not contain a suitable database for the web api service, to fix this error run
+If you encounter the an error “ActiveRecord::NoDatabaseError” then run the following command to create the database.
 ```
-docker compose down
-docker compose run web rake db:create
-docker compose run web rake db:migrate
+docker-compose run web rake db:create
+docker-compose run web rake db:migrate
 ```
-then run
-```docker compose up```
-again
+
+### Potential isssues
+On ubuntu elasticsearch image might need extra VM space, this issue is solved by running ```sudo sysctl -w vm.max_map_count=262144```
 
 ## Highlevel architecture
+<img src="./imgs/highlevel.png" />
 
+## Entities
 
-## Data representaion and ERD 
-
-Application: id, Token, name, chats_count, last_request_time
-Chat: id, application_id, number, title, messages_count, last_request_time
-Message: id, chat_id, number, body, last_request_time
+Application: `id`, `Token`, `name`, `chats_count`, `last_request_time`
+Chat: `id`, `application_id`, `number`, `title`, `messages_count`, `last_request_time`
+Message: `id`, `chat_id`, `number`, `body`, `last_request_time`
 
 ## Routes 
+
+### Searching route
+`GET 	/search/:query` Search in messages bodies 
+
+### Applications [create, update, read]
+`GET 	/applications ` Lists all applications
+
+`POST 	/applications` Create new application. (payload should contain "name") 
+
+`GET 	/applications/:token` List an application's data by specifing its token.
+
+`PATCH 	/applications/:token` Update an application's data by specifing its token. (payload should contain "name") 
+
+### Chats [create, update, read]
+
+`GET 	/applications/:application_token/chats` List all chats of a given application.
+
+`POST 	/applications/:application_token/chats` Create a chat for a given application. (payload should contain "title")
+
+`GET 	/applications/:application_token/chats/:number` Get chat's data of a given application and by providing its number.  
+
+`PATCH 	/applications/:application_token/chats/:number` Update a chat of a given application and by providing its number. (payload should contain "title")
+
+### Messages [create, update, read]
+`GET 	/applications/:application_token/chats/:chat_number/messages` List all messages of a given application token of a given chat number.
+
+`POST 	/applications/:application_token/chats/:chat_number/messages` Create a messages of a given application token of a given chat number. (payload should contain "body")
+
+`GET 	/applications/:application_token/chats/:chat_number/messages/:number`List a messages of a given application token of a given chat number and by providing message number.
+
+`PATCH 	/applications/:application_token/chats/:chat_number/messages/:number` Update a messages of a given application token of a given chat number and by providing message number. (payload should contain "body")
 
 ## Challenges
 
@@ -51,4 +81,4 @@ Message: id, chat_id, number, body, last_request_time
     - For applications table there is an index on the token column
     - For chats table there is a composite index on the (application_id, chat_number)
     - For the messages table there is a composite index in (chat_id, message_number)
-  - 
+
