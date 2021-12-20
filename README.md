@@ -11,6 +11,17 @@ docker compose run web rake db::migrate
 then run
 ```docker compose up```
 again
+
+## Highlevel architecture
+
+
+## Data representaion and ERD 
+
+Application: id, Token, name, chats_count, last_request_time
+Chat: id, application_id, number, title, messages_count, last_request_time
+Message: id, chat_id, number, body, last_request_time
+
+
 ## Challenges
 
 - Writing on database
