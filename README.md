@@ -5,8 +5,8 @@ docker compose up
 maybe an error occur after running this command because the web persistent volume does not contain a suitable database for the web api service, to fix this error run
 ```
 docker compose down
-docker compose run web rake db::create
-docker compose run web rake db::migrate
+docker compose run web rake db:create
+docker compose run web rake db:migrate
 ```
 then run
 ```docker compose up```
@@ -21,6 +21,7 @@ Application: id, Token, name, chats_count, last_request_time
 Chat: id, application_id, number, title, messages_count, last_request_time
 Message: id, chat_id, number, body, last_request_time
 
+## Routes 
 
 ## Challenges
 
