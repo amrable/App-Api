@@ -17,7 +17,9 @@ On ubuntu elasticsearch image might need extra VM space, this issue is solved by
 ## Entities
 
 Application: `id`, `Token`, `name`, `chats_count`, `last_request_time`
+
 Chat: `id`, `application_id`, `number`, `title`, `messages_count`, `last_request_time`
+
 Message: `id`, `chat_id`, `number`, `body`, `last_request_time`
 
 ## Routes 
