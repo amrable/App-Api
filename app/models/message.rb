@@ -19,14 +19,10 @@ class Message < ApplicationRecord
   end
 
   after_commit on: [:create] do
-    __elasticsearch__.index_document if self.published?
+    __elasticsearch__.index_document 
   end
 
   after_commit on: [:update] do
-    if self.published?
-      __elasticsearch__.update_document
-    else
-      __elasticsearch__.delete_document
-    end
+    __elasticsearch__.update_document
   end
 end

@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: example
     volumes:
-      - my-datavolume:/var/lib/mysql
+      - database-store:/var/lib/mysql
   redis:
     image: 'redis:4.0-alpine'
     command: redis-server
@@ -25,6 +25,7 @@ services:
     depends_on:
       - db
       - redis
+      - elasticsearch
   sidekiq:
     depends_on:
       - db
@@ -50,9 +51,10 @@ services:
           soft: -1
           hard: -1
       volumes:
-        - ./docker_data/elasticsearch/data:/usr/share/elasticsearch/data
+        - esdata1:/usr/share/elasticsearch/data
       ports:
         - 9200:9200
 volumes:
-  my-datavolume:
+  database-store:
   redis:
+  esdata1:
