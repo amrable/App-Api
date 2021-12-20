@@ -1,6 +1,16 @@
 ## How to run with docker compose
-
-
+```
+docker compose up
+```
+maybe an error occur after running this command because the web persistent volume does not contain a suitable database for the web api service, to fix this error run
+```
+docker compose down
+docker compose run web rake db::create
+docker compose run web rake db::migrate
+```
+then run
+```docker compose up```
+again
 ## Challenges
 
 - Writing on database
