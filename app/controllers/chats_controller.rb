@@ -10,13 +10,13 @@ class ChatsController < ApplicationController
 
   # GET /applications/:application_token/chats
   def index
-    @chats = Chat.where(application_id: @application.id)
+    @chats = Chat.select("title", "number", "messages_count").where(application_id: @application.id)
     render json: @chats
   end
 
   # GET /applications/:application_token/chats/:number
   def show
-    @chat = Chat.where(application_id: @application.id, number: params[:number])
+    @chat = Chat.select("title", "number", "messages_count").where(application_id: @application.id, number: params[:number])
     render json: @chat
   end
 
@@ -40,7 +40,7 @@ class ChatsController < ApplicationController
     worker_params = chat_params
     worker_params["last_request_timestamp"] = DateTime.now
     UpdateChatWorker.perform_async(params[:application_token], params[:number], worker_params.to_h)
-    render :json => {:status => "success"}
+    render :json => {:status => "Request has been sent."}
   end
 
   private

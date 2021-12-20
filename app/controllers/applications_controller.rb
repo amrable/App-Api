@@ -3,13 +3,13 @@ class ApplicationsController < ApplicationController
 
   # GET /applications
   def index
-    @applications = Application.all
+    @applications = Application.select("token", "name", "chats_count")
     render json: @applications
   end
   
   # GET /applications/uuid
   def show
-    render json: @application
+    render json: @application.select("token", "name", "chats_count")
   end
   
   # POST /applications
@@ -27,7 +27,7 @@ class ApplicationsController < ApplicationController
     worker_params = application_params
     worker_params["last_request_timestamp"] = DateTime.now
     UpdateApplicationWorker.perform_async(params[:token], worker_params.to_h)
-    render :json => {:status => "success"}
+    render :json => {:status => "Request has been sent."}
   end
 
 

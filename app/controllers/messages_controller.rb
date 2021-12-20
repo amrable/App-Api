@@ -10,13 +10,13 @@ class MessagesController < ApplicationController
 
   # GET /messages
   def index
-    @messages = Message.where(chat_id: @chat.id)
+    @messages = Message.select("body", "number").where(chat_id: @chat.id)
     render json: @messages
   end
 
   # GET /messages/1
   def show
-    @message = Message.where(chat_id: @chat.id, number: params[:number])
+    @message = Message.select("body", "number").where(chat_id: @chat.id, number: params[:number])
     render json: @message
   end
 
@@ -43,7 +43,7 @@ class MessagesController < ApplicationController
     worker_params = message_params
     worker_params["last_request_timestamp"] = DateTime.now
     UpdateMessageWorker.perform_async(params[:application_token], params[:chat_number], params[:number], worker_params.to_h)
-    render :json => {:status => "success"}
+    render :json => {:status => "Request has been sent."}
   end
 
   private
